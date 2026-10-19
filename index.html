@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="author" content="عمر الرملي">
+<title>ألعب وأتعلم</title>
+<style>
+:root{--bg:#fff7e6;--card:#ffffff;--ink:#2b2b3a;--p:#ff7a59;--g:#3dbb74;--r:#ec5b5b;--b:#4a90e2;--y:#ffc83d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1b2e;--card:#2a2842;--ink:#f4f1ff}}
+:root[data-theme="dark"]{--bg:#1d1b2e;--card:#2a2842;--ink:#f4f1ff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic",sans-serif;text-align:center;min-height:100vh;overflow-x:hidden}
+.w{max-width:520px;margin:0 auto;padding:14px}
+h1{font-size:30px;margin:4px 0}
+button{font:inherit;border:0;cursor:pointer}
+.menu button{display:block;width:100%;margin:10px 0;padding:18px;font-size:24px;border-radius:22px;color:#fff;background:var(--p);box-shadow:0 5px 0 rgba(0,0,0,.18);transition:transform .1s}
+.menu button:active{transform:translateY(4px);box-shadow:none}
+.menu button:nth-child(4){background:var(--b)}.menu button:nth-child(5){background:var(--g)}.menu button:nth-child(6){background:#9b59d0}.menu button:nth-child(7){background:#e8508a}
+.mas{font-size:64px;display:inline-block}
+.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:20px}
+.home{background:var(--card);color:var(--ink);border-radius:14px;padding:8px 14px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.cell{background:var(--card);border-radius:16px;padding:10px 0;font-size:30px;cursor:pointer;border:3px solid transparent}
+.cell:active{border-color:var(--p);transform:scale(.92)}
+.big{background:var(--card);border-radius:26px;padding:14px;margin:10px 0;min-height:160px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px}
+.big .x{font-size:70px;line-height:1.2}
+.big .q{font-size:21px}
+.items{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+.items span{font-size:36px;cursor:pointer;transition:transform .15s;opacity:.55}
+.items span.on{opacity:1;transform:scale(1.25) rotate(-8deg);filter:drop-shadow(0 0 6px var(--y))}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{font-size:44px;padding:16px 0;background:var(--b);color:#fff;border-radius:22px;box-shadow:0 5px 0 rgba(0,0,0,.18)}
+.opt:active{transform:translateY(4px)}
+.opt.ok{background:var(--g)}.opt.no{background:var(--r);animation:shake .4s}
+.msg{height:38px;font-size:25px;margin-top:8px}
+.prog{height:14px;background:var(--card);border-radius:9px;overflow:hidden;margin-bottom:6px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--y),var(--p));transition:width .4s}
+.bals{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 22px;padding:14px 0;min-height:300px}
+.balloon{width:84px;height:104px;border-radius:50% 50% 48% 48%;font-size:44px;color:#fff;display:flex;align-items:center;justify-content:center;animation:bob 2.2s ease-in-out infinite;position:relative;cursor:pointer;box-shadow:inset -8px -8px 0 rgba(0,0,0,.12)}
+.balloon::after{content:"";position:absolute;bottom:-26px;width:2px;height:26px;background:var(--ink);opacity:.4}
+.balloon.pop{animation:pop .25s forwards}.balloon.no{animation:shake .4s}
+.hidden{display:none}
+.by{margin:14px 0 6px;font-size:18px;opacity:.75}
+.menu button{padding:13px;font-size:21px;margin:8px 0}
+.again{display:block;width:100%;margin:8px 0;padding:14px;font-size:22px;border-radius:18px;color:#fff;background:var(--g)}
+.again.h{background:var(--card);color:var(--ink)}
+.conf{position:fixed;top:-40px;font-size:28px;pointer-events:none;z-index:9;animation:fall 1.8s ease-in forwards}
+.bounce{animation:bounce .6s}.shk{animation:shake .5s}
+@keyframes bob{50%{transform:translateY(-14px)}}
+@keyframes pop{to{transform:scale(1.6);opacity:0}}
+@keyframes shake{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+@keyframes bounce{40%{transform:translateY(-26px) scale(1.2)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(420deg)}}
+</style>
+</head>
+<body>
+<div class="w">
+ <div id="menu" class="menu">
+  <h1>🌈 ألعب وأتعلم</h1>
+  <div class="mas" id="m0">🐻</div>
+  <div class="by" id="stat" style="opacity:1;font-size:19px;margin:2px 0 8px"></div>
+  <button style="background:#ff7a59;font-size:26px;padding:20px" onclick="openSec('ar')">🔤 عربي<br><small style="font-size:15px">الحروف والكلمات</small></button>
+  <button style="background:#4a90e2;font-size:26px;padding:20px" onclick="openSec('en')">🅰️ English<br><small style="font-size:15px">Letters &amp; Numbers</small></button>
+  <button style="background:#3dbb74;font-size:26px;padding:20px" onclick="openSec('math')">🧮 رياضيات<br><small style="font-size:15px">الأرقام والجمع والمقارنة</small></button>
+  <button style="background:#17a2b8;font-size:18px" onclick="toggleDG()">🔢 شكل الأرقام: <span class="keep" id="dgl"></span></button>
+  <button style="background:#e8508a;font-size:18px" onclick="testVoice()">🔊 اختبار الصوت</button>
+  <div id="vmsg" style="font-size:15px;min-height:20px"></div>
+  <button style="background:#6c757d;font-size:18px" onclick="parentCorner()">📊 ركن الأهل</button>
+  <div class="by">✨ تصميم: عمر الرملي ✨</div>
+ </div>
+ <div id="sec" class="hidden menu"></div>
+
+ <div id="learn" class="hidden">
+  <div class="bar"><button class="home" onclick="home()">🏠 الرئيسية</button><span id="lt"></span></div>
+  <div class="big" id="lbig"></div>
+  <div class="grid" id="lgrid"></div>
+ </div>
+
+ <div id="quiz" class="hidden">
+  <div class="bar"><button class="home" onclick="home()">🏠 الرئيسية</button><span class="mas" style="font-size:40px" id="m1">🐻</span><span>⭐ <b id="sc">0</b></span></div>
+  <div class="prog"><i id="pg"></i></div>
+  <div class="big"><div class="x" id="qx"></div><div class="q" id="qq"></div></div>
+  <div class="opts" id="opts"></div>
+  <div class="msg" id="msg"></div>
+ </div>
+
+ <div id="bal" class="hidden">
+  <div class="bar"><button class="home" onclick="home()">🏠 الرئيسية</button><span class="mas" style="font-size:40px" id="m2">🐻</span><span>🎈 <b id="bc">0</b>/8</span></div>
+  <div class="big" style="min-height:90px" onclick="say(bsay)"><div class="q" id="bt"></div></div>
+  <div class="bals" id="bals"></div>
+ </div>
+</div>
+
+<script>
+var L=[["أ","🐰","أرنب"],["ب","🦆","بطة"],["ت","🍎","تفاحة"],["ث","🦊","ثعلب"],["ج","🐪","جمل"],["ح","🐴","حصان"],["خ","🐑","خروف"],["د","🐔","دجاجة"],["ذ","🌽","ذرة"],["ز","🦒","زرافة"],["س","🐟","سمكة"],["ش","☀️","شمس"],["ع","🍇","عنب"],["ف","🐘","فيل"],["ق","🐒","قرد"],["ك","📖","كتاب"],["ل","🍋","ليمون"],["م","🍌","موز"],["ن","🌟","نجمة"],["و","🌹","وردة"]];
+var N=["واحد","اثنان","ثلاثة","أربعة","خمسة","ستة","سبعة","ثمانية","تسعة","عشرة","أحد عشر","اثنا عشر","ثلاثة عشر","أربعة عشر","خمسة عشر","ستة عشر","سبعة عشر","ثمانية عشر","تسعة عشر","عشرون"];
+var OBJ=["🍎","🐥","⭐","🍓","🚗","🐟","🌸"];
+var COL=["#ec5b5b","#4a90e2","#3dbb74","#9b59d0","#ff9a3d","#e8508a"];
+var AR="٠١٢٣٤٥٦٧٨٩";
+function ar(n){return String(n).split("").map(function(d){return AR[d]}).join("")}
+function $(i){return document.getElementById(i)}
+function rnd(a){return a[Math.floor(Math.random()*a.length)]}
+function shuffle(a){return a.sort(function(){return Math.random()-.5})}
+function show(id){["menu","sec","learn","quiz","bal"].forEach(function(s){$(s).classList.toggle("hidden",s!==id)})}
+function home(){show("menu");try{speechSynthesis.cancel()}catch(e){}}
+function say(t){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang=EN?"en-US":"ar-SA";u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+function beep(ok){try{var c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type="triangle";o.frequency.value=ok?880:180;g.gain.value=.15;o.start();if(ok)o.frequency.setValueAtTime(1175,c.currentTime+.12);o.stop(c.currentTime+(ok?.3:.35))}catch(e){}}
+function mood(ok){["m0","m1","m2"].forEach(function(i){var m=$(i);m.textContent=ok?rnd(["🥳","😍","🤩","😄"]):"😢";m.classList.remove("bounce","shk");void m.offsetWidth;m.classList.add(ok?"bounce":"shk")});setTimeout(function(){["m0","m1","m2"].forEach(function(i){$(i).textContent="🐻"})},1300)}
+function conf(){for(var i=0;i<26;i++){var s=document.createElement("span");s.className="conf";s.textContent=rnd(["🎉","⭐","✨","🎈","💖","🌈"]);s.style.left=Math.random()*95+"%";s.style.animationDelay=Math.random()*.5+"s";document.body.appendChild(s);setTimeout(function(e){e.remove()},2500,s)}}
+function objs(n,e){var h="";for(var i=0;i<n;i++)h+="<span>"+e+"</span>";return h}
+
+/* ---- تعلّم ---- */
+function learn(t){
+ show("learn");$("lt").textContent=t==="l"?"الحروف":"الأرقام";
+ var g=$("lgrid");g.innerHTML="";
+ $("lbig").innerHTML='<div class="x">👆</div><div class="q">اضغط على أي بطاقة لتسمع</div>';
+ var items=t==="l"?L:N.map(function(w,i){return [i+1,"",w]});
+ g.style.gridTemplateColumns=t==="l"?"repeat(5,1fr)":"repeat(5,1fr)";
+ items.forEach(function(it,i){
+  var d=document.createElement("div");d.className="cell";d.textContent=it[0];
+  d.style.color=COL[i%6];
+  d.onclick=function(){
+   if(t==="l"){$("lbig").innerHTML='<div class="x">'+it[0]+' '+it[1]+'</div><div class="q">'+it[2]+'</div><div class="q" style="font-size:38px;color:var(--p)">'+it[0]+F[0]+' &nbsp; '+it[0]+F[1]+' &nbsp; '+it[0]+F[2]+'</div><div class="q" style="font-size:15px;opacity:.7">فتحة · كسرة · ضمة</div>';say("حرف "+it[0]+"، "+it[2])}
+   else{var n=it[0];$("lbig").innerHTML='<div class="x">'+n+' = '+ar(n)+'</div><div class="items">'+objs(n,OBJ[n%7]).replace(/<span>/g,'<span class="on" style="font-size:24px">')+'</div><div class="q">'+it[2]+'</div>';say(it[2])}
+  };
+  g.appendChild(d);
+ });
+}
+
+/* ---- اختبار ---- */
+var mode="l",qi=0,score=0,miss=0,lock=false,cur="";
+function quiz(t){mode=t;qi=0;score=0;show("quiz");next()}
+function next(){
+ if(qi>=10)return end();
+ lock=false;miss=0;$("msg").textContent="";$("sc").textContent=score;$("pg").style.width=(qi*10)+"%";qi++;
+ var o=$("opts");o.innerHTML="";var ans,ch;
+ $("qx").onclick=null;$("qx").style.fontSize="";
+ if(mode==="l"){
+  var it=rnd(L);ans=it[0];
+  var w=shuffle(L.filter(function(x){return x[0]!==ans}).map(function(x){return x[0]})).slice(0,3);ch=shuffle(w.concat([ans]));
+  if(Math.random()<.5){$("qx").textContent=it[1];$("qq").textContent="«"+it[2]+"» تبدأ بأي حرف؟";cur=it[2]+" تبدأ بأي حرف";}
+  else{$("qx").textContent="🔊";$("qq").textContent="اسمع واضغط على الحرف الصحيح";cur="أين حرف "+ans;$("qx").onclick=function(){say(cur)}}
+ }else{
+  var n=1+Math.floor(Math.random()*20);ans=n;
+  var w2=[];while(w2.length<3){var r=1+Math.floor(Math.random()*20);if(r!==n&&w2.indexOf(r)<0)w2.push(r)}
+  ch=shuffle(w2.concat([n]));
+  if(Math.random()<.6){
+   var c=0,e=rnd(OBJ);$("qx").innerHTML='<div class="items">'+objs(n,e)+'</div>';$("qx").style.fontSize="16px";
+   $("qq").textContent="اضغط على كل واحدة لتعدّها، ثم اختر العدد";cur="كم عددها";
+   [].forEach.call($("qx").querySelectorAll("span"),function(s){s.onclick=function(){if(s.classList.contains("on"))return;s.classList.add("on");c++;say(N[c-1])}});
+  }else{$("qx").textContent="🔊";$("qq").textContent="اسمع واضغط على الرقم الصحيح";cur=N[n-1];$("qx").onclick=function(){say(cur)}}
+ }
+ say(cur);
+ ch.forEach(function(c){
+  var b=document.createElement("button");b.className="opt";b.textContent=c;
+  b.onclick=function(){
+   if(lock)return;
+   if(c===ans){lock=true;if(!miss)score++;$("sc").textContent=score;b.classList.add("ok");$("msg").textContent=rnd(["🎉 أحسنت!","🌟 رائع!","👏 ممتاز!"]);beep(true);mood(true);conf();say("أحسنت");setTimeout(next,1700)}
+   else{miss=1;b.classList.add("no");b.disabled=true;$("msg").textContent="حاول مرة أخرى 💪";beep(false);mood(false)}
+  };
+  o.appendChild(b);
+ });
+}
+function end(){
+ $("pg").style.width="100%";var s=score>=9?3:score>=6?2:1;
+ $("qx").onclick=null;$("qx").style.fontSize="";$("qx").textContent="🏆";
+ $("qq").textContent="حصلت على "+ar(score)+" من ١٠  "+"⭐".repeat(s);
+ $("opts").innerHTML='<button class="again" style="grid-column:1/3" onclick="quiz(mode)">🔁 العب مرة أخرى</button><button class="again h" style="grid-column:1/3" onclick="home()">🏠 الرئيسية</button>';
+ $("msg").textContent="";conf();beep(true);say("برافو! أنت بطل");
+}
+
+/* ---- بالونات ---- */
+var bs=0,bt="l",target,bsay="";
+function bal(t){bt=t;bs=0;show("bal");bnext()}
+function bnext(){
+ if(bs>=8){addStars(2);$("bt").innerHTML="🏆 برافو! فرقعت كل البالونات";$("bals").innerHTML='<div style="width:100%"><button class="again" onclick="bal(bt)">🔁 العب مرة أخرى</button><button class="again h" onclick="home()">🏠 الرئيسية</button></div>';conf();say("برافو أنت بطل");return}
+ $("bc").textContent=bs;
+ var pool=bt==="l"?L.map(function(x){return x[0]}):[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+ target=rnd(pool);
+ var items=shuffle(shuffle(pool.filter(function(x){return x!==target})).slice(0,5).concat([target]));
+ bsay=bt==="l"?"فرقع بالون حرف "+target:"فرقع بالون الرقم "+N[target-1];
+ $("bt").innerHTML="🎯 "+(bt==="l"?"فرقع حرف: ":"فرقع الرقم: ")+"<b style='font-size:40px'>"+target+"</b> 🔊";
+ var bl=$("bals");bl.innerHTML="";
+ items.forEach(function(v,i){
+  var b=document.createElement("div");b.className="balloon";b.textContent=v;b.style.background=COL[i%6];b.style.animationDelay=(Math.random()*-2)+"s";
+  b.onclick=function(){
+   if(v===target){b.classList.add("pop");bs++;$("bc").textContent=bs;beep(true);mood(true);conf();say("أحسنت");setTimeout(bnext,900)}
+   else{b.classList.remove("no");void b.offsetWidth;b.classList.add("no");beep(false);mood(false)}
+  };
+  bl.appendChild(b);
+ });
+ say(bsay);
+}
+/* ---- تقدّم وملصقات ---- */
+var S={st:0,ok:{},no:{}};
+try{var _s=JSON.parse(localStorage.getItem("omar_kids"));if(_s&&_s.ok&&_s.no)S=_s}catch(e){}
+function save(){try{localStorage.setItem("omar_kids",JSON.stringify(S))}catch(e){}}
+var F=[1614,1616,1615].map(function(c){return String.fromCharCode(c)});
+var ST=["🐱","🐶","🦊","🐼","🦁","🐯","🐸","🦄","🐙","🐲","🚀","👑"];
+function lvl(){return S.st<10?"🌱 مبتدئ":S.st<30?"🧭 مستكشف":S.st<60?"🦸 بطل":"👑 أسطورة"}
+function stat(){var n=Math.min(12,Math.floor(S.st/3));$("stat").innerHTML=lvl()+" · ⭐ "+ar(S.st)+"<br>"+(n?ST.slice(0,n).join(" "):"🎁 اجمع النجوم لتفتح ملصقات جديدة")}
+function addStars(n){S.st+=n;save()}
+function rec(ok){var k=!$("bal").classList.contains("hidden")?bt:mode;var m=ok?S.ok:S.no;m[k]=(m[k]||0)+1;save()}
+var _mood=mood;mood=function(ok){_mood(ok);rec(ok)};
+var _home=home;home=function(){_home();stat()};
+var _end=end;end=function(){var s=score>=9?3:score>=6?2:1,b=Math.floor(S.st/3);addStars(s);$("opts").style.gridTemplateColumns="";_end();var a=Math.floor(S.st/3);if(a>b&&a<=12)$("qq").textContent+="  🎁 ملصق جديد: "+ST[a-1]};
+stat();
+
+/* ---- ألعاب جديدة ---- */
+var _next=next;
+next=function(){$("opts").style.gridTemplateColumns="";$("qq").style.direction="";if(mode.length>1)return /^e/.test(mode)?next3():next2();_next()};
+function good(b){lock=true;if(!miss)score++;$("sc").textContent=score;if(b)b.classList.add("ok");$("msg").textContent=rnd(["🎉 أحسنت!","🌟 رائع!","👏 ممتاز!"]);beep(true);mood(true);conf();say("أحسنت");setTimeout(next,1700)}
+function bad(b){miss=1;if(b){b.classList.add("no");b.disabled=true}$("msg").textContent="حاول مرة أخرى 💪";beep(false);mood(false)}
+function mk(c,ans){var b=document.createElement("button");b.className="opt";b.textContent=c;b.onclick=function(){if(lock)return;c===ans?good(b):bad(b)};$("opts").appendChild(b)}
+function dis(n,mx){var a=[];while(a.length<3){var r=1+Math.floor(Math.random()*mx);if(r!==n&&a.indexOf(r)<0)a.push(r)}return a}
+function objsOn(n,e){return objs(n,e).replace(/<span>/g,'<span class="on" style="opacity:1">')}
+function next2(){
+ if(qi>=10)return end();
+ lock=false;miss=0;$("msg").textContent="";$("sc").textContent=score;$("pg").style.width=(qi*10)+"%";qi++;
+ var o=$("opts"),q=$("qx");o.innerHTML="";q.onclick=null;q.style.fontSize="";
+ if(mode==="seq"){
+  var s=1+Math.floor(Math.random()*17),h=Math.floor(Math.random()*4),a=[s,s+1,s+2,s+3],ans=a[h];
+  q.style.fontSize="42px";q.textContent=a.map(function(x,i){return i===h?"❓":x}).join("  ،  ");
+  $("qq").textContent="ما الرقم الناقص؟";say("ما الرقم الناقص");
+  shuffle(dis(ans,20).concat([ans])).forEach(function(c){mk(c,ans)});
+ }else if(mode==="cmp"){
+  var x=1+Math.floor(Math.random()*20),y;do{y=1+Math.floor(Math.random()*20)}while(y===x);
+  var big=Math.random()<.5,r=big?Math.max(x,y):Math.min(x,y);
+  q.style.fontSize="40px";q.innerHTML=x+" &nbsp;⚖️&nbsp; "+y;
+  $("qq").textContent=big?"أيّهما أكبر؟ 📈":"أيّهما أصغر؟ 📉";say(big?"أيهما أكبر":"أيهما أصغر");
+  shuffle([x,y]).forEach(function(c){mk(c,r)});
+ }else if(mode==="add"){
+  var p=1+Math.floor(Math.random()*7),t=1+Math.floor(Math.random()*7),e=rnd(OBJ),sum=p+t;
+  q.style.fontSize="16px";q.innerHTML='<div class="items">'+objsOn(p,e)+'<span class="on" style="opacity:1">➕</span>'+objsOn(t,e)+'</div>';
+  $("qq").textContent=p+" + "+t+" = ❓";say(N[p-1]+" زائد "+N[t-1]+" يساوي كم");
+  shuffle(dis(sum,16).concat([sum])).forEach(function(c){mk(c,sum)});
+ }else{
+  var it=rnd(L),w=it[2].replace(/ /g,"").split(""),pos=0;
+  q.innerHTML="<div>"+it[1]+'</div><div id="sl" style="font-size:44px;display:flex;gap:10px;justify-content:center"></div>';
+  var draw=function(){$("sl").innerHTML=w.map(function(c,i){return '<span style="border-bottom:4px solid var(--p);min-width:34px;display:inline-block">'+(i<pos?c:"&nbsp;")+"</span>"}).join("")};
+  draw();$("qq").textContent="رتّب الحروف لتكوّن الكلمة";say("رتب الحروف لتكوّن الكلمة");
+  o.style.gridTemplateColumns="repeat(3,1fr)";
+  shuffle(w.slice()).forEach(function(c){
+   var b=document.createElement("button");b.className="opt";b.textContent=c;
+   b.onclick=function(){
+    if(lock)return;
+    if(c===w[pos]){pos++;b.disabled=true;b.classList.add("ok");beep(true);draw();if(pos===w.length){$("sl").textContent=it[2];say(it[2]);good(null)}}
+    else{b.classList.add("no");setTimeout(function(){b.classList.remove("no")},450);bad(null)}
+   };
+   o.appendChild(b);
+  });
+ }
+}
+
+/* ---- ركن الأهل ---- */
+function parentCorner(){
+ var names={l:"الحروف",n:"الأرقام",seq:"الرقم الناقص",cmp:"المقارنة",add:"الجمع",wd:"تركيب الكلمات",el:"الحروف الإنجليزية",en:"الأرقام الإنجليزية",ew:"تهجئة الكلمات الإنجليزية"};
+ var d=document.createElement("div");d.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px";
+ var h='<div style="background:var(--card);color:var(--ink);border-radius:24px;padding:18px;max-width:440px;width:100%;max-height:90vh;overflow:auto"><h2 style="margin:0 0 6px">📊 ركن الأهل</h2><div style="margin-bottom:8px">'+lvl()+" · ⭐ "+ar(S.st)+" نجمة</div>",weak=null,wp=101;
+ for(var k in names){var o=S.ok[k]||0,n=S.no[k]||0,t=o+n,p=t?Math.round(o*100/t):0;
+  h+='<div style="margin:8px 0;text-align:right">'+names[k]+" — "+(t?p+"% ("+o+" صحيح / "+n+" خطأ)":"لم يلعب بعد")+'<div class="prog" style="height:12px;margin:3px 0"><i style="width:'+p+'%"></i></div></div>';
+  if(t>=3&&p<wp){wp=p;weak=k}}
+ h+='<div style="margin:12px 0;font-size:18px">'+(weak?"💡 يحتاج طفلك مزيدًا من التدريب على: <b>"+names[weak]+"</b>":"💡 ابدأوا باللعب لتظهر نصائح مخصّصة")+'</div><button class="again" id="pc">إغلاق</button><button class="again h" id="pr">🗑️ مسح التقدّم</button></div>';
+ d.innerHTML=h;document.body.appendChild(d);
+ d.querySelector("#pc").onclick=function(){d.remove()};
+ var r=d.querySelector("#pr"),sure=false;
+ r.onclick=function(){if(!sure){sure=true;r.textContent="اضغط مرة أخرى للتأكيد";return}S={st:0,ok:{},no:{}};save();stat();d.remove()};
+}
+/* ---- English + أقسام ---- */
+var EL=[["A","🍎","Apple"],["B","⚽","Ball"],["C","🐱","Cat"],["D","🐶","Dog"],["E","🐘","Elephant"],["F","🐟","Fish"],["G","🍇","Grapes"],["H","🎩","Hat"],["I","🧊","Ice"],["J","🧃","Juice"],["K","🪁","Kite"],["L","🦁","Lion"],["M","🌙","Moon"],["N","🥜","Nut"],["O","🍊","Orange"],["P","🍕","Pizza"],["Q","👸","Queen"],["R","🐰","Rabbit"],["S","☀️","Sun"],["T","🌳","Tree"],["U","☂️","Umbrella"],["V","🎻","Violin"],["W","⌚","Watch"],["X","🎹","Xylophone"],["Y","⛵","Yacht"],["Z","🦓","Zebra"]];
+var ENW=["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen","Twenty"];
+var EN=false,sec=null;
+var SEC={
+ ar:{t:"🔤 عربي",e:"📚",c:"#ff7a59",i:[["📖 أتعلم الحروف","learn('l')"],["⭐ اختبار الحروف","quiz('l')"],["🎈 بالونات الحروف","bal('l')"],["🧩 ركّب الكلمة","quiz('wd')"]]},
+ en:{t:"🅰️ English",e:"🌍",c:"#4a90e2",i:[["📖 Learn Letters","learnE('el')"],["📖 Learn Numbers","learnE('en')"],["⭐ Letters Quiz","quiz('el')"],["⭐ Numbers Quiz","quiz('en')"],["🎈 Letter Balloons","balE('el')"],["🎈 Number Balloons","balE('en')"],["🧩 Spell the Word","quiz('ew')"]]},
+ math:{t:"🧮 رياضيات",e:"🔢",c:"#3dbb74",i:[["📖 أتعلم الأرقام (١ - ٢٠)","learn('n')"],["⭐ اختبار العدّ","quiz('n')"],["🎈 بالونات الأرقام","bal('n')"],["🔢 ما الرقم الناقص؟","quiz('seq')"],["⚖️ أكبر أم أصغر؟","quiz('cmp')"],["➕ أتعلم الجمع","quiz('add')"]]}
+};
+function openSec(k){
+ sec=k;EN=(k==="en");$("bt").style.direction="";
+ var d=SEC[k],h='<div class="bar"><button class="home" onclick="sec=null;EN=false;home()">🏠</button><span style="font-size:26px">'+d.t+'</span><span></span></div><div class="mas" style="font-size:56px">'+d.e+"</div>";
+ d.i.forEach(function(x){h+='<button style="background:'+d.c+'" onclick="'+x[1]+'">'+x[0]+"</button>"});
+ $("sec").innerHTML=h;show("sec");
+}
+var _home2=home;home=function(){_home2();if(sec)openSec(sec);else EN=false};
+
+function good(b){lock=true;if(!miss)score++;$("sc").textContent=score;if(b)b.classList.add("ok");$("msg").textContent=rnd(EN?["🎉 Great job!","🌟 Awesome!","👏 Well done!"]:["🎉 أحسنت!","🌟 رائع!","👏 ممتاز!"]);beep(true);mood(true);conf();say(EN?"Great job":"أحسنت");setTimeout(next,1700)}
+function bad(b){miss=1;if(b){b.classList.add("no");b.disabled=true}$("msg").textContent=EN?"Try again 💪":"حاول مرة أخرى 💪";beep(false);mood(false)}
+
+var _end2=end;
+end=function(){_end2();if(EN){var m=$("qq").textContent.match(/ملصق جديد: (.*)$/),s=score>=9?3:score>=6?2:1;$("qq").textContent="You got "+score+" out of 10  "+"⭐".repeat(s)+(m?"  🎁 New sticker: "+m[1]:"");$("opts").innerHTML='<button class="again" style="grid-column:1/3" onclick="quiz(mode)">🔁 Play again</button><button class="again h" style="grid-column:1/3" onclick="home()">🏠 Home</button>';say("Great job! You are a champion")}};
+
+function learnE(t){
+ show("learn");$("lt").textContent=t==="el"?"English Letters":"English Numbers";
+ var g=$("lgrid");g.innerHTML="";
+ $("lbig").innerHTML='<div class="x">👆</div><div class="q">Tap a card to listen</div>';
+ var items=t==="el"?EL:ENW.map(function(w,i){return [i+1,"",w]});
+ items.forEach(function(it,i){
+  var d=document.createElement("div");d.className="cell";d.textContent=t==="el"?it[0]+it[0].toLowerCase():it[0];d.style.color=COL[i%6];
+  d.onclick=function(){
+   if(t==="el"){$("lbig").innerHTML='<div class="x">'+it[0]+it[0].toLowerCase()+" "+it[1]+'</div><div class="q">'+it[2]+"</div>";say(it[0]+". "+it[2])}
+   else{var n=it[0];$("lbig").innerHTML='<div class="x">'+n+'</div><div class="items">'+objsOn(n,OBJ[n%7]).replace(/opacity:1/g,"opacity:1;font-size:24px")+'</div><div class="q">'+it[2]+"</div>";say(it[2])}
+  };
+  g.appendChild(d);
+ });
+}
+
+function next3(){
+ if(qi>=10)return end();
+ lock=false;miss=0;$("msg").textContent="";$("sc").textContent=score;$("pg").style.width=(qi*10)+"%";qi++;
+ var o=$("opts"),q=$("qx"),qq=$("qq");o.innerHTML="";q.onclick=null;q.style.fontSize="";qq.style.direction="ltr";
+ if(mode==="el"){
+  var it=rnd(EL),ans=it[0],oth=shuffle(EL.filter(function(x){return x[0]!==ans}).map(function(x){return x[0]})).slice(0,3);
+  if(Math.random()<.5){q.textContent=it[1];qq.textContent="What letter does “"+it[2]+"” start with?";cur="What letter does "+it[2]+" start with"}
+  else{q.textContent="🔊";qq.textContent="Listen and tap the right letter";cur="Find the letter "+ans;q.onclick=function(){say(cur)}}
+  say(cur);shuffle(oth.concat([ans])).forEach(function(c){mk(c,ans)});
+ }else if(mode==="en"){
+  var n=1+Math.floor(Math.random()*20);
+  if(Math.random()<.6){
+   var k=0,e=rnd(OBJ);q.innerHTML='<div class="items">'+objs(n,e)+"</div>";q.style.fontSize="16px";
+   qq.textContent="Tap each one to count, then choose the number";cur="How many";
+   [].forEach.call(q.querySelectorAll("span"),function(s){s.onclick=function(){if(s.classList.contains("on"))return;s.classList.add("on");k++;say(ENW[k-1])}});
+  }else{q.textContent="🔊";qq.textContent="Listen and tap the right number";cur=ENW[n-1];q.onclick=function(){say(cur)}}
+  say(cur);shuffle(dis(n,20).concat([n])).forEach(function(c){mk(c,n)});
+ }else{
+  var ws=EL.filter(function(x){return x[2].length<=5}),it2=rnd(ws),w=it2[2].toUpperCase().split(""),pos=0;
+  q.innerHTML="<div>"+it2[1]+'</div><div id="sl" style="font-size:44px;display:flex;gap:10px;justify-content:center;direction:ltr"></div>';
+  var draw=function(){$("sl").innerHTML=w.map(function(c,i){return '<span style="border-bottom:4px solid var(--p);min-width:34px;display:inline-block">'+(i<pos?c:"&nbsp;")+"</span>"}).join("")};
+  draw();qq.textContent="Spell the word!";say("Spell the word");
+  o.style.gridTemplateColumns="repeat(3,1fr)";
+  shuffle(w.slice()).forEach(function(c){
+   var b=document.createElement("button");b.className="opt";b.textContent=c;
+   b.onclick=function(){
+    if(lock)return;
+    if(c===w[pos]){pos++;b.disabled=true;b.classList.add("ok");beep(true);draw();if(pos===w.length){$("sl").textContent=it2[2];say(it2[2]);good(null)}}
+    else{b.classList.add("no");setTimeout(function(){b.classList.remove("no")},450);bad(null)}
+   };
+   o.appendChild(b);
+  });
+ }
+}
+
+function balE(t){bt=t;bs=0;EN=true;show("bal");bnextE()}
+function bnextE(){
+ if(bs>=8){addStars(2);$("bt").innerHTML="🏆 Great job! You popped them all";$("bals").innerHTML='<div style="width:100%"><button class="again" onclick="balE(bt)">🔁 Play again</button><button class="again h" onclick="home()">🏠 Home</button></div>';conf();say("Great job");return}
+ $("bc").textContent=bs;
+ var pool=[];if(bt==="el")pool=EL.map(function(x){return x[0]});else for(var i=1;i<=20;i++)pool.push(i);
+ var tg=rnd(pool),items=shuffle(shuffle(pool.filter(function(x){return x!==tg})).slice(0,5).concat([tg]));
+ bsay=bt==="el"?"Pop the balloon with the letter "+tg:"Pop the number "+ENW[tg-1];
+ $("bt").style.direction="ltr";$("bt").innerHTML="🎯 "+(bt==="el"?"Pop the letter: ":"Pop the number: ")+"<b style='font-size:40px'>"+tg+"</b> 🔊";
+ var bl=$("bals");bl.innerHTML="";
+ items.forEach(function(v,i){
+  var b=document.createElement("div");b.className="balloon";b.textContent=v;b.style.background=COL[i%6];b.style.animationDelay=(Math.random()*-2)+"s";
+  b.onclick=function(){
+   if(v===tg){b.classList.add("pop");bs++;$("bc").textContent=bs;beep(true);mood(true);conf();say("Great job");setTimeout(bnextE,900)}
+   else{b.classList.remove("no");void b.offsetWidth;b.classList.add("no");beep(false);mood(false)}
+  };
+  bl.appendChild(b);
+ });
+ say(bsay);
+}
+/* ---- أصوات عربية وإنجليزية ---- */
+var VO=[];
+function loadV(){try{VO=speechSynthesis.getVoices()||[]}catch(e){}}
+loadV();try{speechSynthesis.onvoiceschanged=loadV}catch(e){}
+function pick(l){var p=l.slice(0,2).toLowerCase(),a=VO.filter(function(v){return v.lang&&v.lang.toLowerCase().indexOf(p)===0});return a.filter(function(v){return v.lang.replace("_","-").toLowerCase()===l.toLowerCase()})[0]||a[0]}
+function say(t,l){try{speechSynthesis.cancel();var lg=l||(EN?"en-US":"ar-SA"),u=new SpeechSynthesisUtterance(t);u.lang=lg;var v=pick(lg);if(v)u.voice=v;u.rate=.85;speechSynthesis.speak(u)}catch(e){}}
+function testVoice(){
+ loadV();var m=$("vmsg");
+ m.innerHTML=VO.length?("العربية: "+(pick("ar")?"✅":"❌ غير متوفرة")+" · English: "+(pick("en")?"✅":"❌")+(pick("ar")?"":"<br>لتفعيل العربية: إعدادات الجهاز ← اللغة ← تحويل النص إلى كلام ← ثبّت العربية")):"جارٍ تشغيل الصوت… إن لم تسمع شيئًا فارفع الصوت وتأكد من وجود محرك نطق في الجهاز";
+ say("أهلاً! واحد، اثنان، ثلاثة. أ، ب، ت","ar-SA");
+ setTimeout(function(){say("Hello! One, two, three. A, B, C","en-US")},4200);
+}
+
+/* ---- شكل الأرقام: 123 أو ١٢٣ ---- */
+var DG=S.dg||"w",_sw=false;
+function sweep(){
+ var mode=EN?"w":DG,w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,list=[];
+ while(n=w.nextNode())list.push(n);
+ list.forEach(function(n){
+  var p=n.parentNode;if(!p||(p.closest&&p.closest(".keep")))return;
+  var t=n.nodeValue,r=mode==="e"?t.replace(/[0-9]/g,function(d){return AR[d]}):t.replace(/[٠-٩]/g,function(d){return AR.indexOf(d)});
+  if(r!==t)n.nodeValue=r;
+ });
+}
+function dgl(){$("dgl").textContent=DG==="w"?"1 2 3":"١ ٢ ٣"}
+function toggleDG(){DG=DG==="w"?"e":"w";S.dg=DG;save();dgl();sweep()}
+try{new MutationObserver(function(){if(_sw)return;_sw=true;requestAnimationFrame(function(){sweep();setTimeout(function(){_sw=false},0)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}catch(e){}
+dgl();sweep();
+
+/* ---- بطاقات التعلّم بالصوت ---- */
+function spk(label,fn,bg){var b=document.createElement("button");b.className="again";b.style.cssText="flex:1;margin:0;font-size:16px;padding:12px 4px"+(bg?";background:"+bg:"");b.textContent=label;b.onclick=fn;return b}
+function card(html,btns){var big=$("lbig");big.innerHTML=html;var r=document.createElement("div");r.style.cssText="display:flex;gap:8px;width:100%;margin-top:6px";btns.forEach(function(b){r.appendChild(b)});big.appendChild(r)}
+function numCard(n){
+ card('<div class="x keep">'+n+" &nbsp; "+ar(n)+'</div><div class="items">'+objsOn(n,OBJ[n%7]).replace(/opacity:1/g,"opacity:1;font-size:22px")+'</div><div class="q">'+N[n-1]+" · "+ENW[n-1]+"</div>",
+ [spk("🔊 عربي",function(){say(N[n-1],"ar-SA")}),spk("🔊 English",function(){say(ENW[n-1],"en-US")},"var(--b)")]);
+ say(EN?ENW[n-1]:N[n-1]);
+}
+function letCard(it){
+ card('<div class="x">'+it[0]+" "+it[1]+'</div><div class="q">'+it[2]+'</div><div class="q" style="font-size:38px;color:var(--p)">'+it[0]+F[0]+" &nbsp; "+it[0]+F[1]+" &nbsp; "+it[0]+F[2]+'</div><div class="q" style="font-size:15px;opacity:.7">فتحة · كسرة · ضمة</div>',
+ [spk("🔊 الحرف",function(){say("حرف "+it[0],"ar-SA")}),spk("🔊 الكلمة",function(){say(it[2],"ar-SA")},"var(--b)"),spk("🔊 الحركات",function(){say(it[0]+F[0]+" "+it[0]+F[1]+" "+it[0]+F[2],"ar-SA")},"#9b59d0")]);
+ say("حرف "+it[0]+"، "+it[2],"ar-SA");
+}
+function letCardE(it){
+ card('<div class="x">'+it[0]+it[0].toLowerCase()+" "+it[1]+'</div><div class="q">'+it[2]+"</div>",
+ [spk("🔊 Letter",function(){say("Letter "+it[0],"en-US")}),spk("🔊 Word",function(){say(it[2],"en-US")},"var(--b)")]);
+ say("Letter "+it[0]+". "+it[2],"en-US");
+}
+function learn(t){
+ show("learn");$("lt").textContent=t==="l"?"الحروف":"الأرقام";
+ var g=$("lgrid");g.innerHTML="";
+ $("lbig").innerHTML='<div class="x">👆</div><div class="q">اضغط على أي بطاقة لتسمع</div>';
+ var items=t==="l"?L:N.map(function(w,i){return [i+1,"",w]});
+ items.forEach(function(it,i){
+  var d=document.createElement("div");d.className="cell";d.textContent=it[0];d.style.color=COL[i%6];
+  d.onclick=function(){t==="l"?letCard(it):numCard(it[0])};
+  g.appendChild(d);
+ });
+}
+function learnE(t){
+ show("learn");$("lt").textContent=t==="el"?"English Letters":"English Numbers";
+ var g=$("lgrid");g.innerHTML="";
+ $("lbig").innerHTML='<div class="x">👆</div><div class="q">Tap a card to listen</div>';
+ var items=t==="el"?EL:ENW.map(function(w,i){return [i+1,"",w]});
+ items.forEach(function(it,i){
+  var d=document.createElement("div");d.className="cell";d.textContent=t==="el"?it[0]+it[0].toLowerCase():it[0];d.style.color=COL[i%6];
+  d.onclick=function(){t==="el"?letCardE(it):numCard(it[0])};
+  g.appendChild(d);
+ });
+}
+
+/* ---- نطق أصلي على أندرويد (Capacitor TTS) ---- */
+var _webSay=say;
+say=function(t,l){var P=window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.TextToSpeech;if(P){try{P.stop();P.speak({text:t,lang:l||(EN?"en-US":"ar-SA"),rate:.85,pitch:1,volume:1,category:"ambient"})}catch(e){_webSay(t,l)}return}_webSay(t,l)};
+</script>
+</body>
+</html>
